@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "yV2v/YhNqvBRU3wx26y7hVcMqnMqmDKFLbS5DlCPaLvllGx3K/u+c7SCHNFscgyaqBzfbQSQWP/ZQ7kVk0MZuw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Joao\\Documents\\Projects\\JF91\\JF91.MovieScraper\\JF91.MovieScraper.Backbone\\JF91.MovieScraper.Backbone.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Joao\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\Joao\\.nuget\\packages\\restsharp\\110.2.0\\restsharp.110.2.0.nupkg.sha512",
+    "C:\\Users\\Joao\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\Joao\\.nuget\\packages\\system.text.json\\7.0.2\\system.text.json.7.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
