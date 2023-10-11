@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JF91.MovieScraper.Backbone"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JF91.MovieScraper.Models", "JF91.MovieScraper.Models\JF91.MovieScraper.Models.csproj", "{C17A03FE-5759-4789-A6C0-ACF502430122}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JF91.MovieScraper.Shared", "JF91.MovieScraper.Shared\JF91.MovieScraper.Shared.csproj", "{EB0B3EF0-3F42-4499-98D9-898641D4005A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{C17A03FE-5759-4789-A6C0-ACF502430122}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C17A03FE-5759-4789-A6C0-ACF502430122}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C17A03FE-5759-4789-A6C0-ACF502430122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB0B3EF0-3F42-4499-98D9-898641D4005A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB0B3EF0-3F42-4499-98D9-898641D4005A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB0B3EF0-3F42-4499-98D9-898641D4005A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB0B3EF0-3F42-4499-98D9-898641D4005A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

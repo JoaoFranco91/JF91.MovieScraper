@@ -1,5 +1,6 @@
 ﻿using JF91.MovieScraper.Backbone.Contracts;
 using JF91.MovieScraper.Models;
+using JF91.MovieScraper.Shared.Extensions;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -37,21 +38,10 @@ public class TmdbService : ITmdbService
 
         var data = JsonConvert.DeserializeObject<SearchMovie.Root>(response.Content);
 
-        data.results.RemoveAll
-        (
-            x =>
-                x.title.ToLower().Replace
-                (
-                    " ",
-                    ""
-                ) 
-                != 
-                name.ToLower().Replace
-                (
-                    " ",
-                    ""
-                )
-        );
+        if (data.results.Count > 1)
+        {
+            data.results.RemoveAll(x => x.title.DamerauLevenshteinDistanceTo(name) > 10);
+        }
 
         return data.results.FirstOrDefault();
     }

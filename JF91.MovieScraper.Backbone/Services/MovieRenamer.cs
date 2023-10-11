@@ -1,11 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using JF91.MovieScraper.Backbone.Contracts;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace JF91.MovieScraper.Backbone.Services;
 
 public class MovieRenamer : IMovieRenamer
 {
+    private readonly ILogger<MovieRenamer> _logger;
     private readonly ITmdbService _tmdbService;
     private readonly IFileManagerService _fileManagerService;
 
@@ -16,11 +18,13 @@ public class MovieRenamer : IMovieRenamer
 
     public MovieRenamer
     (
+        ILogger<MovieRenamer> logger,
         ITmdbService tmdbService,
         IFileManagerService fileManagerService,
         IConfiguration configuration
     )
     {
+        _logger = logger;
         _tmdbService = tmdbService;
         _fileManagerService = fileManagerService;
         
@@ -29,9 +33,11 @@ public class MovieRenamer : IMovieRenamer
 
     public async Task ExecuteMovieRenamer()
     {
+        _logger.LogInformation("Starting Movie Renamer");
         var movieDirectories = GetMovieDirectories(dirPath);
         var movieFiles = GetMovieFiles(dirPath);
 
+        _logger.LogInformation("Processing Movie Folders");
         await ProcessMovieDirectories
         (
             dirPath,
@@ -51,8 +57,13 @@ public class MovieRenamer : IMovieRenamer
         string[] movieDirs
     )
     {
+        _logger.LogWarning($"Movies Found: {movieDirs.Length}");
+        
         foreach (var movieDir in movieDirs)
         {
+            _logger.LogInformation("#####################################################");
+            _logger.LogInformation($"Processing folder: {movieDir}");
+            
             string formatName = FormatDirectoryFullName(movieDir);
 
             var results = Regex.Matches
@@ -90,8 +101,20 @@ public class MovieRenamer : IMovieRenamer
 
             if (tmdbMovie != null)
             {
+                var tmdbMovieTitle = tmdbMovie.title;
+                tmdbMovieTitle = tmdbMovieTitle.Replace(":", " - ");
+                tmdbMovieTitle = tmdbMovieTitle.Replace("/", "-");
+                tmdbMovieTitle = tmdbMovieTitle.Replace(@"\", "-");
+                tmdbMovieTitle = tmdbMovieTitle.Replace(">", "-");
+                tmdbMovieTitle = tmdbMovieTitle.Replace("<", "-");
+                tmdbMovieTitle = tmdbMovieTitle.Replace("|", "-");
+                tmdbMovieTitle = tmdbMovieTitle.Replace("?", string.Empty);
+                tmdbMovieTitle = tmdbMovieTitle.Replace("\"", string.Empty);
+                tmdbMovieTitle = tmdbMovieTitle.Replace("*", string.Empty);
+                
                 var files = _fileManagerService.GetFilesInfoInFolder(movieDir);
 
+                _logger.LogInformation("Deleting non media files.");
                 var filesToDelete = files.Where
                 (
                     x =>
@@ -104,36 +127,41 @@ public class MovieRenamer : IMovieRenamer
                     File.Delete(fileToDelete.FullName);
                 }
                 
+                _logger.LogInformation("Deleting extra folders.");
                 var foldersToDelete = Directory.GetDirectories(movieDir);
                 foreach (var folderToDelete in foldersToDelete)
                 {
                     Directory.Delete(folderToDelete, true);
                 }
 
+                _logger.LogInformation("Renaming media files.");
                 files = files.Except(filesToDelete).ToList();
                 foreach (var file in files)
                 {
-                    if (file.Name != $"{tmdbMovie.title} ({movieYear}){file.Extension}")
+                    if (file.Name != $"{tmdbMovieTitle} ({movieYear}){file.Extension}")
                     {
                         file.Attributes = FileAttributes.Normal;
                         _fileManagerService.RenameFile
                         (
                             file.FullName,
-                            $"{file.DirectoryName}/{tmdbMovie.title} ({movieYear}){file.Extension}"
+                            $"{file.DirectoryName}/{tmdbMovieTitle} ({movieYear}){file.Extension}"
                         );
                     }
                 }
 
+                _logger.LogInformation("Renaming media folder");
                 var sourceDir = new DirectoryInfo(movieDir);
-                if (sourceDir.Name != $"{tmdbMovie.title} ({movieYear})")
+                if (sourceDir.Name != $"{tmdbMovieTitle} ({movieYear})")
                 {
                     Directory.Move
                     (
                         movieDir,
-                        $"{dirPath}/{tmdbMovie.title} ({movieYear})"
+                        $"{dirPath}/{tmdbMovieTitle} ({movieYear})"
                     );
                 }
             }
+            
+            _logger.LogInformation("#####################################################");
         }
     }
 
